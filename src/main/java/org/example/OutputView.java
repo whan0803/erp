@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.List;
 
 public class OutputView {
 
@@ -35,6 +36,22 @@ public class OutputView {
         System.out.println("프로그램을 종료합니다.");
     }
 
+    public void printAccounts(List<Account> accounts) {
+        System.out.println("[계정과목 목록]");
+
+        if (accounts.isEmpty()) {
+            System.out.println("등록된 계정과목이 없습니다.");
+            return;
+        }
+
+        System.out.println("코드 | 계정명 | 분류");
+
+        for (Account account : accounts) {
+            System.out.println(account.getAccountCode() + " | "
+                    + account.getAccountName() + " | "
+                    + account.getAccountCl().getLabel());
+        }
+    }
 
 
 

@@ -1,10 +1,12 @@
 package org.example;
 
+import org.example.Enum.AccountClEnum;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,7 +64,32 @@ class OutputViewTest {
         assertEquals("프로그램을 종료합니다.", output);
     }
 
+    @Test
+    void 계정이_없으면_제목과_안내만_출력한다() {
+        String output = captureOutput(() -> outputView.printAccounts(List.of()));
 
+        assertEquals("""
+                [계정과목 목록]
+                등록된 계정과목이 없습니다.
+                """.stripTrailing(), output);
+    }
+
+    @Test
+    void 계정_목록에_코드와_이름과_한글_분류를_출력한다() {
+        List<Account> accounts = List.of(
+                new Account("001", "현금", AccountClEnum.ASSET),
+                new Account("201", "차입금", AccountClEnum.LIABILITY)
+        );
+
+        String output = captureOutput(() -> outputView.printAccounts(accounts));
+
+        assertEquals("""
+                [계정과목 목록]
+                코드 | 계정명 | 분류
+                001 | 현금 | 자산
+                201 | 차입금 | 부채
+                """.stripTrailing(), output);
+    }
 
     private String captureOutput(Runnable action) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();

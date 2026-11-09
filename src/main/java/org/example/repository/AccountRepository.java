@@ -2,7 +2,9 @@ package org.example.repository;
 
 import org.example.Account;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AccountRepository {
@@ -23,4 +25,9 @@ public class AccountRepository {
     }
 
 
+    public List<Account> findBySortedByCode() {
+        return accounts.values().stream()
+                .sorted(Comparator.comparing(Account::getAccountCode))
+                .toList();
+    }
 }

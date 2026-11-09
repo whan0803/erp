@@ -91,7 +91,34 @@ class ControllerTest {
         }
     }
 
+    @Test
+    void 등록된_계정이_없으면_안내만_출력한다() {
+        String output = runWithInput("2\n0\n");
+        String normalizedOutput = String.join("\n", output.lines().toList());
 
+        assertTrue(normalizedOutput.contains("""
+            [계정과목 목록]
+            등록된 계정과목이 없습니다.
+            """), output);
+        assertFalse(output.contains("코드 | 계정명 | 분류"), output);
+        assertFalse(output.contains("[ERROR]"), output);
+    }
+
+    @Test
+    void 계정과목을_등록_순서와_관계없이_코드_오름차순으로_조회한다() {
+        String output = runWithInput(
+                "1\n201,차입금,부채\n1\n001,현금,자산\n2\n0\n"
+        );
+        String normalizedOutput = String.join("\n", output.lines().toList());
+
+        assertTrue(normalizedOutput.contains("""
+            [계정과목 목록]
+            코드 | 계정명 | 분류
+            001 | 현금 | 자산
+            201 | 차입금 | 부채
+            """), output);
+        assertFalse(output.contains("[ERROR]"), output);
+    }
 
 
 

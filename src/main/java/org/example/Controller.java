@@ -37,9 +37,13 @@ public class Controller {
 
         return switch (line.trim()) {
             case "1" -> registerAccount();
+            case "2" -> {
+                outputView.printAccounts(accountRepository.findBySortedByCode());
+                yield true;
+            }
 
             
-            case "2", "3", "4", "5", "6", "7" -> {
+            case "3", "4", "5", "6", "7" -> {
                 outputView.printError("아직 구현하지 않은 메뉴입니다.");
                 yield true;
             }
