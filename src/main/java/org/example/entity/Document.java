@@ -1,4 +1,7 @@
-package org.example;
+package org.example.entity;
+
+import org.example.Enum.DocumentStatus;
+import org.example.Enum.DocumentType;
 
 import java.time.LocalDate;
 
@@ -8,7 +11,9 @@ public class Document {
     private final Account debitAccount;
     private final Account creditAccount;
     private final long amount;
-
+    private final Integer originalDocumentNumber;
+    private final DocumentType type;
+    private final DocumentStatus status;
     public Document(
             LocalDate transactionDate,
             String description,
@@ -23,6 +28,9 @@ public class Document {
         this.debitAccount = debitAccount;
         this.creditAccount = creditAccount;
         this.amount = amount;
+        this.originalDocumentNumber = null;
+        this.type = DocumentType.NORMAL;
+        this.status = DocumentStatus.ACTIVE;
     }
 
     private void validateTransaction(
@@ -83,5 +91,17 @@ public class Document {
 
     public long getAmount() {
         return amount;
+    }
+
+    public Integer getOriginalDocumentNumber() {
+        return originalDocumentNumber;
+    }
+
+    public DocumentStatus getStatus() {
+        return status;
+    }
+
+    public DocumentType getType() {
+        return type;
     }
 }

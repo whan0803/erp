@@ -1,11 +1,12 @@
 package org.example;
 
 
+import org.example.entity.Account;
+import org.example.entity.Document;
 import org.example.Enum.AccountClEnum;
 import org.example.repository.AccountRepository;
 import org.example.repository.DocumentRepository;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -49,8 +50,11 @@ public class Controller {
                 yield true;
             }
             case "3" -> registerDocument();
-            
-            case "4", "5", "6", "7" -> {
+            case "5" -> {
+                outputView.printDocuments(documentRepository.findAllSortedDocument());
+                yield true;
+            }
+            case "4", "6", "7" -> {
                 outputView.printError("아직 구현하지 않은 메뉴입니다.");
                 yield true;
             }
@@ -112,8 +116,8 @@ public class Controller {
                 Document document = saveDocument(line);
                 int documentNumber = documentRepository.saveDocument(document);
                 outputView.printDocumentRegistered(documentNumber);
-
                 return true;
+
             } catch (IllegalArgumentException e) {
                 outputView.printError(e.getMessage());
             }
@@ -132,6 +136,7 @@ public class Controller {
         Account debit = accountRepository.findByCode(parts[2].trim());
         Account credit = accountRepository.findByCode(parts[3].trim());
         long amount = parseAmount(parts[4].trim());
+
 
         return new Document(date, description, debit, credit, amount);
 
@@ -157,7 +162,4 @@ public class Controller {
 
         return Long.parseLong(value);
     }
-
-
-
 }

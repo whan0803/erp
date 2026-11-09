@@ -1,9 +1,10 @@
 package org.example.repository;
 
-import org.example.Account;
-import org.example.Document;
+import org.example.entity.Document;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DocumentRepository {
@@ -15,5 +16,12 @@ public class DocumentRepository {
         int documentNumber = documents.size() + 1;
         documents.put(documentNumber, document);
         return documentNumber;
+    }
+
+    public List<Map.Entry<Integer, Document>> findAllSortedDocument() {
+        return documents.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> Map.entry(entry.getKey(), entry.getValue()))
+                .toList();
     }
 }

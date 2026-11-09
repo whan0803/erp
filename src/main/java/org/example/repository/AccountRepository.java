@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.Account;
+import org.example.entity.Account;
 
 import java.util.Comparator;
 import java.util.HashMap;

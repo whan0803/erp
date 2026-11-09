@@ -1,6 +1,11 @@
 package org.example;
 
+import org.example.entity.Account;
+import org.example.entity.Document;
+
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class OutputView {
 
@@ -59,6 +64,35 @@ public class OutputView {
 
     public void printDocumentRegistered(int documentNumber) {
         System.out.println("전표가 작성되었습니다. (전표번호: " + documentNumber + ")");
+    }
+
+    public void printDocuments(List<Map.Entry<Integer, Document>> documents) {
+        System.out.println("[전표 목록]");
+
+        if(documents.isEmpty()){
+            System.out.println("등록된 전표가 없습니다.");
+            return;
+        }
+
+        for (Map.Entry<Integer, Document> entry  : documents) {
+            printDocumentRow(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void printDocumentRow(int number, Document document) {
+        Integer originalNumber = document.getOriginalDocumentNumber();
+        String original = originalNumber == null ? "-": originalNumber.toString();
+
+        System.out.printf(Locale.US, "%d | %s | %s | %s | %s | %,d원 | %s%n",
+                number,
+                document.getTransactionDate(),
+                document.getType().getLabel(),
+                document.getStatus().getLabel(),
+                original,
+                document.getAmount(),
+                document.getDescription());
+
+
     }
 
 

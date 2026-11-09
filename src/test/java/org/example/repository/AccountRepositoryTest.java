@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.Account;
+import org.example.entity.Account;
 import org.example.Enum.AccountClEnum;
 import org.junit.jupiter.api.Test;
 
