@@ -11,6 +11,9 @@ public class AccountRepository {
 
     private final Map<String, Account> accounts = new HashMap<>();
 
+    public int count() {
+        return  accounts.size();
+    }
 
 
 
@@ -24,6 +27,15 @@ public class AccountRepository {
         accounts.put(code, account);
     }
 
+    public Account findByCode(String code) {
+        Account account = accounts.get(code);
+
+        if(account == null) {
+        throw new IllegalArgumentException(
+                "등록되지 않은 계정 코드입니다. (" + code + ")"
+        );}
+        return account;
+    }
 
     public List<Account> findBySortedByCode() {
         return accounts.values().stream()

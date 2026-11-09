@@ -53,7 +53,13 @@ public class OutputView {
         }
     }
 
+    public void printDocumentPrompt() {
+        System.out.println("전표를 입력해 주세요. (거래일자,적요,차변코드,대변코드,금액)");
+    }
 
+    public void printDocumentRegistered(int documentNumber) {
+        System.out.println("전표가 작성되었습니다. (전표번호: " + documentNumber + ")");
+    }
 
 
 

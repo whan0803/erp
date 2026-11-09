@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.repository.AccountRepository;
+import org.example.repository.DocumentRepository;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -81,7 +82,8 @@ class ControllerTest {
             Controller controller = new Controller(
                     new InputView(scanner),
                     new AccountRepository(),
-                    new OutputView()
+                    new OutputView(),
+                    new DocumentRepository()
             );
             controller.run();
 
@@ -120,7 +122,38 @@ class ControllerTest {
         assertFalse(output.contains("[ERROR]"), output);
     }
 
+    @Test
+    void 계정이_하나면_전표_입력을_받지_않고_메뉴로_돌아간다() {
+        String output = runWithInput("1\n001,현금,자산\n3\n0\n");
 
+        assertTrue(output.contains(
+                "[ERROR] 전표 작성에는 계정과목이 2개 이상 필요합니다."
+        ), output);
+        assertFalse(output.contains("전표를 입력해 주세요."), output);
+        assertEquals(3L, countMenus(output), output);
+        assertTrue(output.stripTrailing().endsWith("프로그램을 종료합니다."), output);
+    }
+
+    @Test
+    void 계정이_정확히_두_개면_전표를_작성하고_메뉴로_돌아간다() {
+        String output = runWithInput("""
+            1
+            001,현금,자산
+            1
+            201,차입금,부채
+            3
+            2026-11-06,운영자금 차입,001,201,100000
+            0
+            """);
+
+        assertTrue(output.contains(
+                "전표를 입력해 주세요. (거래일자,적요,차변코드,대변코드,금액)"
+        ), output);
+        assertTrue(output.contains("전표가 작성되었습니다. (전표번호: 1)"), output);
+        assertFalse(output.contains("[ERROR]"), output);
+        assertEquals(4L, countMenus(output), output);
+        assertTrue(output.stripTrailing().endsWith("프로그램을 종료합니다."), output);
+    }
 
 
 }
