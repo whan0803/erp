@@ -40,6 +40,15 @@ public class DocumentRepository {
         return reversalNumber;
     }
 
+    public Document findByNumber(int number) {
+        Document document = documents.get(number);
+        if(document == null) {
+            throw new IllegalArgumentException("존재하지 않는 전표번호입니다.");
+        }
+
+        return document;
+    }
+
     private int nextDocumentNumber() {
         return documents.size() + 1;
     }

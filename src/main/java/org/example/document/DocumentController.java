@@ -109,24 +109,54 @@ public class DocumentController {
         );
     }
 
+    public boolean showDocumentDetail() {
+        if (documentRepository.findAllSortedDocument().isEmpty()) {
+            outputView.printError("등록된 전표가 없습니다.");
+            return true;
+        }
+
+        while (true) {
+            outputView.printDocumentDetailPrompt();
+            String line = inputView.readLine();
+
+            if (line == null) {
+                return false;
+            }
+
+            try {
+                int number = parseDocumentNumber(line.trim());
+                Document document = documentRepository.findByNumber(number);
+                outputView.printDocumentDetail(number, document);
+                return true;
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
     private CancellationRequest parseCancellationRequest(String line) {
         String[] parts = line.split(",", -1);
         if (parts.length != 2) {
             throw new IllegalArgumentException("원전표번호와 취소일자를 입력해 주세요.");
         }
 
-        String number = parts[0].trim();
-        if (!number.matches("[1-9][0-9]{0,9}")) {
-            throw new IllegalArgumentException("전표번호는 1부터 2,147,483,647까지 입력해 주세요.");
-        }
-
-        int originalNumber = Integer.parseInt(number);
+        int originalNumber = parseDocumentNumber(parts[0].trim());
         LocalDate cancelDate = parseTransactionDate(parts[1].trim());
-
         return new CancellationRequest(originalNumber, cancelDate);
     }
 
+    private int parseDocumentNumber(String number) {
+        String message = "전표번호는 1부터 2,147,483,647까지 입력해 주세요.";
+        if (!number.matches("[1-9][0-9]{0,9}")) {
+            throw new IllegalArgumentException(message);
+        }
 
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(message, e);
+        }
+    }
 
     private LocalDate parseTransactionDate(String value) {
         if (!value.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {

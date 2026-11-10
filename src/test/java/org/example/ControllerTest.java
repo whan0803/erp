@@ -232,4 +232,94 @@ class ControllerTest {
                 2 | 2026-11-07 | 취소 | 정상 | 1 | 100,000원 | 운영자금 차입
                 """), output);
     }
+
+    @Test
+    void 전표가_없으면_상세_조회_입력_없이_메뉴로_돌아간다() {
+        String output = runWithInput("6\n0\n");
+
+        assertTrue(output.contains("[ERROR] 등록된 전표가 없습니다."), output);
+        assertFalse(output.contains("조회할 전표번호를 입력해 주세요."), output);
+        assertEquals(2L, countMenus(output), output);
+    }
+
+    @Test
+    void 상세_조회에서_잘못된_번호를_다시_입력받고_일반_전표를_출력한다() {
+        String output = runWithInput("""
+                1
+                101,현금,자산
+                1
+                201,차입금,부채
+                3
+                2026-11-06,운영자금 차입,101,201,100000
+                6
+                99
+                +1
+                01
+                2147483648
+                1
+                0
+                """);
+
+        assertEquals(4L, output.lines().filter(line -> line.startsWith("[ERROR]")).count(), output);
+        assertEquals(5L, output.lines().filter("조회할 전표번호를 입력해 주세요."::equals).count(), output);
+        assertEquals(5L, countMenus(output), output);
+        assertTrue(output.replace("\r\n", "\n").contains("""
+                [전표 상세]
+                전표번호: 1
+                거래일자: 2026-11-06
+                구분: 일반
+                상태: 정상
+                원전표번호: -
+                적요: 운영자금 차입
+                차변: 101 현금 | 100,000원
+                대변: 201 차입금 | 100,000원
+                """), output);
+    }
+
+    @Test
+    void 취소_전표_상세에서_원전표번호와_뒤집힌_차대변을_표시한다() {
+        String output = runWithInput("""
+                1
+                101,현금,자산
+                1
+                201,차입금,부채
+                3
+                2026-11-06,운영자금 차입,101,201,100000
+                4
+                1,2026-11-07
+                6
+                2
+                0
+                """);
+
+        assertFalse(output.contains("[ERROR]"), output);
+        assertTrue(output.replace("\r\n", "\n").contains("""
+                [전표 상세]
+                전표번호: 2
+                거래일자: 2026-11-07
+                구분: 취소
+                상태: 정상
+                원전표번호: 1
+                적요: 운영자금 차입
+                차변: 201 차입금 | 100,000원
+                대변: 101 현금 | 100,000원
+                """), output);
+    }
+
+    @Test
+    void 상세_조회_입력이_끝나면_정상_종료한다() {
+        String output = runWithInput("""
+                1
+                101,현금,자산
+                1
+                201,차입금,부채
+                3
+                2026-11-06,운영자금 차입,101,201,100000
+                6
+                """);
+
+        assertTrue(output.contains("조회할 전표번호를 입력해 주세요."), output);
+        assertFalse(output.contains("[전표 상세]"), output);
+        assertTrue(output.stripTrailing().endsWith("프로그램을 종료합니다."), output);
+    }
 }

@@ -107,4 +107,32 @@ public class OutputView {
         System.out.println("전표가 취소되었습니다. (원전표번호: "
                 + originalNumber + ", 취소전표번호: " + reversalNumber + ")");
     }
+
+    public void printDocumentDetailPrompt() {
+        System.out.println("조회할 전표번호를 입력해 주세요.");
+    }
+
+    public void printDocumentDetail(int number, Document document) {
+        int originalNumber = document.getOriginalDocumentNumber();
+        String original = originalNumber == 0 ? "-" : Integer.toString(originalNumber);
+        String amount = String.format(Locale.US, "%,d원", document.getAmount());
+
+        System.out.println("[전표 상세]");
+        System.out.println("전표번호: " + number);
+        System.out.println("거래일자: " + document.getTransactionDate());
+        System.out.println("구분: " + document.getType().getLabel());
+        System.out.println("상태: " + document.getStatus().getLabel());
+        System.out.println("원전표번호: " + original);
+        System.out.println("적요: " + document.getDescription());
+
+        printDocumentAccount("차변", document.getDebitAccount(), amount);
+        printDocumentAccount("대변", document.getCreditAccount(), amount);
+    }
+
+    private void printDocumentAccount(String side, Account account, String amount) {
+        System.out.println(side + ": " + account.getAccountCode() + " "
+                + account.getAccountName() + " | " + amount);
+    }
+
+
 }
