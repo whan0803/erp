@@ -16,7 +16,7 @@ public class Account {
         this.accountCl = validateAccountCl(accountCl);
     }
 
-    private String validateAccountCode(String accountCode) {
+    private static String validateAccountCode(String accountCode) {
         if(accountCode == null || !accountCode.matches("[0-9]{3}")){
             throw new IllegalArgumentException("계정 코드는 숫자 3자리여야 합니다.");
         }
@@ -24,7 +24,7 @@ public class Account {
     }
 
 
-    private String validateAccountName(String accountName) {
+    private static String validateAccountName(String accountName) {
         if(accountName == null) {
             throw new IllegalArgumentException("계정명을 입력해주세요.");
         }
@@ -37,7 +37,7 @@ public class Account {
         return accountName;
     }
 
-    private AccountClEnum validateAccountCl(AccountClEnum accountCl) {
+    private static AccountClEnum validateAccountCl(AccountClEnum accountCl) {
         if(accountCl == null) {
             throw new IllegalArgumentException("계정 분류를 선택해주세요");
         }

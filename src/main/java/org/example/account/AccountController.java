@@ -27,7 +27,8 @@ public class AccountController {
             }
 
             try {
-                saveAccount(line);
+                String code = saveAccount(line);
+                outputView.printAccountRegistered(code);
                 return true;
             } catch (IllegalArgumentException e) {
                 outputView.printError(e.getMessage());
@@ -35,8 +36,15 @@ public class AccountController {
         }
     }
 
-    private void saveAccount(String line) {
+    private String saveAccount(String line) {
+        Account account = parseAccount(line);
+        accountRepository.save(account);
+        return  account.getAccountCode();
+    }
+
+    private static Account parseAccount(String line) {
         String[] parts = line.split(",", -1);
+
         if (parts.length != 3) {
             throw new IllegalArgumentException("코드, 계정명, 분류를 입력해 주세요.");
         }
@@ -45,9 +53,7 @@ public class AccountController {
         String name = parts[1].trim();
         AccountClEnum category = AccountClEnum.fromLabel(parts[2].trim());
 
-        Account account = new Account(code, name, category);
-        accountRepository.save(account);
-        outputView.printAccountRegistered(account.getAccountCode());
+        return new Account(code, name, category);
     }
 
     public void showAccounts() {

@@ -82,9 +82,7 @@ public class OutputView {
     }
 
     private void printDocumentRow(int number, Document document) {
-        int originalNumber = document.getOriginalDocumentNumber();
-        String original = originalNumber == 0 ? "-" : Integer.toString(originalNumber);
-
+        String original = formatOriginalNumber(document.getOriginalDocumentNumber());
 
 
         System.out.printf(Locale.US, "%d | %s | %s | %s | %s | %,d원 | %s%n",
@@ -97,6 +95,10 @@ public class OutputView {
                 document.getDescription());
 
 
+    }
+
+    private static String formatOriginalNumber(int number) {
+        return number == 0 ? "-" : Integer.toString(number);
     }
 
     public void printCancellationPrompt() {
@@ -113,8 +115,7 @@ public class OutputView {
     }
 
     public void printDocumentDetail(int number, Document document) {
-        int originalNumber = document.getOriginalDocumentNumber();
-        String original = originalNumber == 0 ? "-" : Integer.toString(originalNumber);
+        String original = formatOriginalNumber(document.getOriginalDocumentNumber());
         String amount = String.format(Locale.US, "%,d원", document.getAmount());
 
         System.out.println("[전표 상세]");

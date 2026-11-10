@@ -78,7 +78,7 @@ public class DocumentController {
 
 
     public boolean cancelDocument() {
-        if (documentRepository.findAllSortedDocument().isEmpty()) {
+        if (documentRepository.isEmpty()) {
             outputView.printError("등록된 전표가 없습니다.");
             return true;
         }
@@ -110,7 +110,7 @@ public class DocumentController {
     }
 
     public boolean showDocumentDetail() {
-        if (documentRepository.findAllSortedDocument().isEmpty()) {
+        if (documentRepository.isEmpty()) {
             outputView.printError("등록된 전표가 없습니다.");
             return true;
         }
@@ -134,7 +134,7 @@ public class DocumentController {
         }
     }
 
-    private CancellationRequest parseCancellationRequest(String line) {
+    private static CancellationRequest parseCancellationRequest(String line) {
         String[] parts = line.split(",", -1);
         if (parts.length != 2) {
             throw new IllegalArgumentException("원전표번호와 취소일자를 입력해 주세요.");
@@ -145,8 +145,9 @@ public class DocumentController {
         return new CancellationRequest(originalNumber, cancelDate);
     }
 
-    private int parseDocumentNumber(String number) {
+    private static int parseDocumentNumber(String number) {
         String message = "전표번호는 1부터 2,147,483,647까지 입력해 주세요.";
+
         if (!number.matches("[1-9][0-9]{0,9}")) {
             throw new IllegalArgumentException(message);
         }
@@ -158,7 +159,7 @@ public class DocumentController {
         }
     }
 
-    private LocalDate parseTransactionDate(String value) {
+    private static LocalDate parseTransactionDate(String value) {
         if (!value.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
             throw new IllegalArgumentException("거래일자는 yyyy-MM-dd 형식으로 입력해 주세요.");
         }
@@ -170,7 +171,7 @@ public class DocumentController {
         }
     }
 
-    private long parseAmount(String value) {
+    private static long parseAmount(String value) {
         if (!value.matches("[1-9][0-9]{0,9}")) {
             throw new IllegalArgumentException(
                     "금액은 앞자리 0 없이 1원 이상 1,000,000,000원 이하로 입력해 주세요."

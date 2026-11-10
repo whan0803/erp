@@ -2,9 +2,7 @@ package org.example.document.repository;
 
 import org.example.document.entity.Document;
 
-import javax.print.Doc;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +26,7 @@ public class DocumentRepository {
     }
 
     public int cancelDocument(int originalNumber, LocalDate cancelDate) {
-        Document original = documents.get(originalNumber);
-
-        if(original == null) {
-            throw new IllegalArgumentException("존재하지 않는 전표번호입니다.");
-        }
+        Document original = findByNumber(originalNumber);
         int reversalNumber = nextDocumentNumber();
         Document reversal = original.cancel(originalNumber, cancelDate);
 
@@ -51,6 +45,10 @@ public class DocumentRepository {
 
     private int nextDocumentNumber() {
         return documents.size() + 1;
+    }
+
+    public boolean isEmpty() {
+        return documents.isEmpty();
     }
 
 }

@@ -42,17 +42,7 @@ public class Document {
     }
 
     public Document cancel(int originalNumber, LocalDate cancelDate) {
-        if (type != DocumentType.NORMAL || status != DocumentStatus.ACTIVE) {
-            throw new IllegalArgumentException("정상 상태의 일반 전표만 취소할 수 있습니다.");
-        }
-
-        if (originalNumber < 1) {
-            throw new IllegalArgumentException("원전표번호는 1 이상이어야 합니다.");
-        }
-
-        if (cancelDate == null || cancelDate.isBefore(transactionDate)) {
-            throw new IllegalArgumentException("취소일자는 원전표 거래일자와 같거나 이후여야 합니다.");
-        }
+        validateCancellation(originalNumber, cancelDate);
 
         Document reversal = new Document(
                 cancelDate, description, creditAccount, debitAccount, amount,
@@ -64,7 +54,22 @@ public class Document {
     }
 
 
-    private void validateTransaction(
+    private void validateCancellation(int originalNumber, LocalDate cancelDate) {
+        if (type != DocumentType.NORMAL || status != DocumentStatus.ACTIVE) {
+            throw new IllegalArgumentException("정상 상태의 일반 전표만 취소할 수 있습니다.");
+        }
+
+        if (originalNumber < 1) {
+            throw new IllegalArgumentException("원전표번호는 1 이상이어야 합니다.");
+        }
+
+        if (cancelDate == null || cancelDate.isBefore(transactionDate)) {
+            throw new IllegalArgumentException("취소일자는 원전표 거래일자와 같거나 이후여야 합니다.");
+        }
+    }
+
+
+    private static void validateTransaction(
             LocalDate transactionDate,
             Account debitAccount,
             Account creditAccount,
@@ -91,7 +96,7 @@ public class Document {
         }
     }
 
-    private String validateDescription(String description) {
+    private static String validateDescription(String description) {
         if (description == null) {
             throw new IllegalArgumentException("적요를 입력해 주세요.");
         }
