@@ -1,4 +1,4 @@
-package org.example.Enum;
+package org.example.account.enums;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

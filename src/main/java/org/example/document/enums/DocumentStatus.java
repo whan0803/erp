@@ -1,4 +1,4 @@
-package org.example.Enum;
+package org.example.document.enums;
 
 public enum DocumentStatus {
     ACTIVE("정상"),

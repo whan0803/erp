@@ -1,0 +1,56 @@
+package org.example.account;
+
+import org.example.InputView;
+import org.example.OutputView;
+import org.example.account.entity.Account;
+import org.example.account.enums.AccountClEnum;
+import org.example.account.repository.AccountRepository;
+
+public class AccountController {
+    private final InputView inputView;
+    private final OutputView outputView;
+    private final AccountRepository accountRepository;
+
+    public AccountController(InputView inputView, OutputView outputView, AccountRepository accountRepository) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+        this.accountRepository = accountRepository;
+    }
+
+    public boolean registerAccount() {
+        while (true) {
+            outputView.printAccountPrompt();
+            String line = inputView.readLine();
+
+            if (line == null) {
+                return false;
+            }
+
+            try {
+                saveAccount(line);
+                return true;
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+    private void saveAccount(String line) {
+        String[] parts = line.split(",", -1);
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("코드, 계정명, 분류를 입력해 주세요.");
+        }
+
+        String code = parts[0].trim();
+        String name = parts[1].trim();
+        AccountClEnum category = AccountClEnum.fromLabel(parts[2].trim());
+
+        Account account = new Account(code, name, category);
+        accountRepository.save(account);
+        outputView.printAccountRegistered(account.getAccountCode());
+    }
+
+    public void showAccounts() {
+        outputView.printAccounts(accountRepository.findBySortedByCode());
+    }
+}

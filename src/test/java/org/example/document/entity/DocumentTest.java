@@ -1,8 +1,8 @@
-package org.example;
+package org.example.document.entity;
 
-import org.example.entity.Account;
-import org.example.entity.Document;
-import org.example.Enum.AccountClEnum;
+import org.example.account.entity.Account;
+import org.example.document.entity.Document;
+import org.example.account.enums.AccountClEnum;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -12,6 +12,11 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.example.document.enums.DocumentStatus;
+import org.example.document.enums.DocumentType;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DocumentTest {
 
@@ -98,5 +103,19 @@ class DocumentTest {
                 () -> new Document(DATE, "차입", null, loan, 10_000L));
         assertThrows(IllegalArgumentException.class,
                 () -> new Document(DATE, "차입", cash, null, 10_000L));
+    }
+
+    @Test
+    void 일반_전표는_정상_상태로_생성되고_원전표번호가_없다() {
+        Account cash = new Account("001", "현금", AccountClEnum.ASSET);
+        Account loan = new Account("201", "차입금", AccountClEnum.LIABILITY);
+
+        Document document = new Document(
+                LocalDate.of(2026, 11, 6), "운영자금 차입", cash, loan, 100_000L
+        );
+
+        assertEquals(DocumentType.NORMAL, document.getType());
+        assertEquals(DocumentStatus.ACTIVE, document.getStatus());
+        assertNull(document.getOriginalDocumentNumber());
     }
 }

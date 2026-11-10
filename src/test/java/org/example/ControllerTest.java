@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.repository.AccountRepository;
-import org.example.repository.DocumentRepository;
+import org.example.account.repository.AccountRepository;
+import org.example.document.repository.DocumentRepository;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -155,5 +155,42 @@ class ControllerTest {
         assertTrue(output.stripTrailing().endsWith("프로그램을 종료합니다."), output);
     }
 
+    @Test
+    void 전표가_없으면_목록_제목과_안내만_출력한다() {
+        String output = runWithInput("5\n0\n");
+        String normalized = output.replace("\r\n", "\n");
 
+        assertTrue(normalized.contains("""
+            [전표 목록]
+            등록된 전표가 없습니다.
+            """), output);
+        assertFalse(output.contains("번호 | 거래일자 | 구분 | 상태 | 원전표 | 금액 | 적요"), output);
+        assertFalse(output.contains("[ERROR]"), output);
+    }
+
+    @Test
+    void 전표_목록은_번호순으로_일반_전표의_기본값을_출력한다() {
+        String output = runWithInput("""
+            1
+            101,현금,자산
+            1
+            201,차입금,부채
+            3
+            2026-11-07,운영자금 차입,101,201,100000
+            3
+            2026-11-06,추가 차입,101,201,50000
+            5
+            0
+            """);
+        String normalized = output.replace("\r\n", "\n");
+
+        assertTrue(normalized.contains("""
+                [전표 목록]
+                번호 | 거래일자 | 구분 | 상태 | 원전표 | 금액 | 적요
+                1 | 2026-11-07 | 일반 | 정상 | - | 100,000원 | 운영자금 차입
+                2 | 2026-11-06 | 일반 | 정상 | - | 50,000원 | 추가 차입
+                """), output);
+        assertFalse(output.contains("[ERROR]"), output);
+    }
 }
+

@@ -1,7 +1,8 @@
-package org.example.entity;
+package org.example.document.entity;
 
-import org.example.Enum.DocumentStatus;
-import org.example.Enum.DocumentType;
+import org.example.account.entity.Account;
+import org.example.document.enums.DocumentStatus;
+import org.example.document.enums.DocumentType;
 
 import java.time.LocalDate;
 
@@ -65,12 +66,12 @@ public class Document {
             throw new IllegalArgumentException("적요를 입력해 주세요.");
         }
 
-        String trimmedDescription = description.trim();
-        if (trimmedDescription.isEmpty() || trimmedDescription.length() > 50) {
+        description = description.trim();
+        if (description.isEmpty() || description.length() > 50) {
             throw new IllegalArgumentException("적요는 1자 이상 50자 이하여야 합니다.");
         }
 
-        return trimmedDescription;
+        return description;
     }
 
     public LocalDate getTransactionDate() {

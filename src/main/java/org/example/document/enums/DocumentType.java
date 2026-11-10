@@ -1,4 +1,4 @@
-package org.example.Enum;
+package org.example.document.enums;
 
 public enum DocumentType {
     NORMAL("일반"),

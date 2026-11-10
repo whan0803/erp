@@ -1,6 +1,6 @@
-package org.example.entity;
+package org.example.account.entity;
 
-import org.example.Enum.AccountClEnum;
+import org.example.account.enums.AccountClEnum;
 
 public class Account {
     private final String accountCode;
@@ -29,13 +29,12 @@ public class Account {
             throw new IllegalArgumentException("계정명을 입력해주세요.");
         }
 
-        String trimName = accountName.trim();
-
-        if(trimName.isEmpty() || trimName.length() > 20) {
+        accountName = accountName.trim();
+        if(accountName.isEmpty() || accountName.length() > 20) {
             throw new IllegalArgumentException("계정명은 1자 이상 20자 이하여야 합니다.");
         }
 
-        return trimName;
+        return accountName;
     }
 
     private AccountClEnum validateAccountCl(AccountClEnum accountCl) {

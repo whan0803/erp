@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.repository.AccountRepository;
-import org.example.repository.DocumentRepository;
+import org.example.account.repository.AccountRepository;
+import org.example.document.repository.DocumentRepository;
 
 import java.util.Scanner;
 

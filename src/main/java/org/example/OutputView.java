@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.entity.Account;
-import org.example.entity.Document;
+import org.example.account.entity.Account;
+import org.example.document.entity.Document;
 
 import java.util.List;
 import java.util.Locale;
@@ -74,6 +74,8 @@ public class OutputView {
             return;
         }
 
+        System.out.println("번호 | 거래일자 | 구분 | 상태 | 원전표 | 금액 | 적요");
+
         for (Map.Entry<Integer, Document> entry  : documents) {
             printDocumentRow(entry.getKey(), entry.getValue());
         }
@@ -82,6 +84,8 @@ public class OutputView {
     private void printDocumentRow(int number, Document document) {
         Integer originalNumber = document.getOriginalDocumentNumber();
         String original = originalNumber == null ? "-": originalNumber.toString();
+
+
 
         System.out.printf(Locale.US, "%d | %s | %s | %s | %s | %,d원 | %s%n",
                 number,

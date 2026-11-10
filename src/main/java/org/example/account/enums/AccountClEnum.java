@@ -1,4 +1,4 @@
-package org.example.Enum;
+package org.example.account.enums;
 
 public enum AccountClEnum {
     ASSET("자산"),
