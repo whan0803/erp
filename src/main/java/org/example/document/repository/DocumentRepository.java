@@ -15,9 +15,9 @@ public class DocumentRepository {
 
 
     public int saveDocument(Document document){
-        int documentNumber = documents.size() + 1;
-        documents.put(documentNumber, document);
-        return documentNumber;
+        int number = nextDocumentNumber();
+        documents.put(number, document);
+        return number;
     }
 
     public List<Map.Entry<Integer, Document>> findAllSortedDocument() {
@@ -27,5 +27,21 @@ public class DocumentRepository {
                 .toList();
     }
 
+    public int cancelDocument(int originalNumber, LocalDate cancelDate) {
+        Document original = documents.get(originalNumber);
+
+        if(original == null) {
+            throw new IllegalArgumentException("존재하지 않는 전표번호입니다.");
+        }
+        int reversalNumber = nextDocumentNumber();
+        Document reversal = original.cancel(originalNumber, cancelDate);
+
+        documents.put(reversalNumber, reversal);
+        return reversalNumber;
+    }
+
+    private int nextDocumentNumber() {
+        return documents.size() + 1;
+    }
 
 }

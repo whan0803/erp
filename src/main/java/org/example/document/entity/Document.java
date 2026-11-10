@@ -12,15 +12,22 @@ public class Document {
     private final Account debitAccount;
     private final Account creditAccount;
     private final long amount;
-    private final Integer originalDocumentNumber;
     private final DocumentType type;
-    private final DocumentStatus status;
+    private DocumentStatus status;
+    private final int originalDocumentNumber;
+
     public Document(
-            LocalDate transactionDate,
-            String description,
-            Account debitAccount,
-            Account creditAccount,
-            long amount
+            LocalDate transactionDate, String description,
+            Account debitAccount, Account creditAccount, long amount
+    ) {
+        this(transactionDate, description, debitAccount, creditAccount, amount,
+                DocumentType.NORMAL, DocumentStatus.ACTIVE, 0);
+    }
+
+    private Document(
+            LocalDate transactionDate, String description,
+            Account debitAccount, Account creditAccount, long amount,
+            DocumentType type, DocumentStatus status, int originalDocumentNumber
     ) {
         validateTransaction(transactionDate, debitAccount, creditAccount, amount);
 
@@ -29,10 +36,33 @@ public class Document {
         this.debitAccount = debitAccount;
         this.creditAccount = creditAccount;
         this.amount = amount;
-        this.originalDocumentNumber = null;
-        this.type = DocumentType.NORMAL;
-        this.status = DocumentStatus.ACTIVE;
+        this.type = type;
+        this.status = status;
+        this.originalDocumentNumber = originalDocumentNumber;
     }
+
+    public Document cancel(int originalNumber, LocalDate cancelDate) {
+        if (type != DocumentType.NORMAL || status != DocumentStatus.ACTIVE) {
+            throw new IllegalArgumentException("정상 상태의 일반 전표만 취소할 수 있습니다.");
+        }
+
+        if (originalNumber < 1) {
+            throw new IllegalArgumentException("원전표번호는 1 이상이어야 합니다.");
+        }
+
+        if (cancelDate == null || cancelDate.isBefore(transactionDate)) {
+            throw new IllegalArgumentException("취소일자는 원전표 거래일자와 같거나 이후여야 합니다.");
+        }
+
+        Document reversal = new Document(
+                cancelDate, description, creditAccount, debitAccount, amount,
+                DocumentType.REVERSAL, DocumentStatus.ACTIVE, originalNumber
+        );
+
+        this.status = DocumentStatus.CANCELED;
+        return reversal;
+    }
+
 
     private void validateTransaction(
             LocalDate transactionDate,
@@ -94,7 +124,7 @@ public class Document {
         return amount;
     }
 
-    public Integer getOriginalDocumentNumber() {
+    public int getOriginalDocumentNumber() {
         return originalDocumentNumber;
     }
 
@@ -105,4 +135,5 @@ public class Document {
     public DocumentType getType() {
         return type;
     }
+
 }

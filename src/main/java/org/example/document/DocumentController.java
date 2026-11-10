@@ -5,6 +5,7 @@ import org.example.OutputView;
 import org.example.account.entity.Account;
 import org.example.account.repository.AccountRepository;
 import org.example.document.entity.Document;
+import org.example.document.record.CancellationRequest;
 import org.example.document.repository.DocumentRepository;
 
 import java.time.LocalDate;
@@ -74,6 +75,58 @@ public class DocumentController {
     public void showDocuments() {
         outputView.printDocuments(documentRepository.findAllSortedDocument());
     }
+
+
+    public boolean cancelDocument() {
+        if (documentRepository.findAllSortedDocument().isEmpty()) {
+            outputView.printError("등록된 전표가 없습니다.");
+            return true;
+        }
+
+        while (true) {
+            outputView.printCancellationPrompt();
+            String line = inputView.readLine();
+
+            if (line == null) {
+                return false;
+            }
+
+            try {
+                CancellationRequest request = parseCancellationRequest(line);
+                int reversalNumber = cancelDocument(request);
+                outputView.printDocumentCanceled(request.originalNumber(), reversalNumber);
+                return true;
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+
+    private int cancelDocument(CancellationRequest request) {
+        return documentRepository.cancelDocument(
+                request.originalNumber(), request.cancelDate()
+        );
+    }
+
+    private CancellationRequest parseCancellationRequest(String line) {
+        String[] parts = line.split(",", -1);
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("원전표번호와 취소일자를 입력해 주세요.");
+        }
+
+        String number = parts[0].trim();
+        if (!number.matches("[1-9][0-9]{0,9}")) {
+            throw new IllegalArgumentException("전표번호는 1부터 2,147,483,647까지 입력해 주세요.");
+        }
+
+        int originalNumber = Integer.parseInt(number);
+        LocalDate cancelDate = parseTransactionDate(parts[1].trim());
+
+        return new CancellationRequest(originalNumber, cancelDate);
+    }
+
+
 
     private LocalDate parseTransactionDate(String value) {
         if (!value.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {

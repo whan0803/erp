@@ -1,6 +1,5 @@
 package org.example.account.entity;
 
-import org.example.account.entity.Account;
 import org.example.account.enums.AccountClEnum;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -45,12 +45,14 @@ public class Controller {
                 yield true;
             }
             case "3" -> documentController.registerDocument();
+
+            case "4" -> documentController.cancelDocument();
             case "5" -> {
                 documentController.showDocuments();
                 yield true;
             }
 
-            case "4", "6", "7" -> {
+            case  "6", "7" -> {
                 outputView.printError("아직 구현하지 않은 메뉴입니다.");
                 yield true;
             }

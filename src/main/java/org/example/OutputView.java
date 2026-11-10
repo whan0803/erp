@@ -82,8 +82,8 @@ public class OutputView {
     }
 
     private void printDocumentRow(int number, Document document) {
-        Integer originalNumber = document.getOriginalDocumentNumber();
-        String original = originalNumber == null ? "-": originalNumber.toString();
+        int originalNumber = document.getOriginalDocumentNumber();
+        String original = originalNumber == 0 ? "-" : Integer.toString(originalNumber);
 
 
 
@@ -99,6 +99,12 @@ public class OutputView {
 
     }
 
+    public void printCancellationPrompt() {
+        System.out.println("취소 정보를 입력해 주세요. (원전표번호,취소일자)");
+    }
 
-
+    public void printDocumentCanceled(int originalNumber, int reversalNumber) {
+        System.out.println("전표가 취소되었습니다. (원전표번호: "
+                + originalNumber + ", 취소전표번호: " + reversalNumber + ")");
+    }
 }

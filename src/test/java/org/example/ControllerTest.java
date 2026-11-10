@@ -192,5 +192,44 @@ class ControllerTest {
                 """), output);
         assertFalse(output.contains("[ERROR]"), output);
     }
-}
 
+    @Test
+    void 전표가_없으면_취소_입력을_받지_않고_메뉴로_돌아간다() {
+        String output = runWithInput("4\n0\n");
+
+        assertTrue(output.contains("[ERROR] 등록된 전표가 없습니다."), output);
+        assertFalse(output.contains("취소 정보를 입력해 주세요."), output);
+        assertEquals(2L, countMenus(output), output);
+    }
+
+    @Test
+    void 잘못된_취소_번호를_다시_입력받고_취소_전표를_목록에_표시한다() {
+        String output = runWithInput("""
+                1
+                101,현금,자산
+                1
+                201,차입금,부채
+                3
+                2026-11-06,운영자금 차입,101,201,100000
+                4
+                +1,2026-11-07
+                01,2026-11-07
+                2147483648,2026-11-07
+                1,2026-11-07
+                5
+                0
+                """);
+
+        assertEquals(3L, output.lines().filter(line -> line.startsWith("[ERROR]")).count(), output);
+        assertEquals(4L, output.lines().filter(line -> line.startsWith("취소 정보를 입력해 주세요.")).count(),
+                output);
+        assertEquals(6L, countMenus(output), output);
+        assertTrue(output.contains("전표가 취소되었습니다. (원전표번호: 1, 취소전표번호: 2)"), output);
+        assertTrue(output.replace("\r\n", "\n").contains("""
+                [전표 목록]
+                번호 | 거래일자 | 구분 | 상태 | 원전표 | 금액 | 적요
+                1 | 2026-11-06 | 일반 | 취소 | - | 100,000원 | 운영자금 차입
+                2 | 2026-11-07 | 취소 | 정상 | 1 | 100,000원 | 운영자금 차입
+                """), output);
+    }
+}

@@ -1,7 +1,6 @@
 package org.example.document.entity;
 
 import org.example.account.entity.Account;
-import org.example.document.entity.Document;
 import org.example.account.enums.AccountClEnum;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.example.document.enums.DocumentStatus;
 import org.example.document.enums.DocumentType;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DocumentTest {
 
@@ -116,6 +114,6 @@ class DocumentTest {
 
         assertEquals(DocumentType.NORMAL, document.getType());
         assertEquals(DocumentStatus.ACTIVE, document.getStatus());
-        assertNull(document.getOriginalDocumentNumber());
+        assertEquals(0, document.getOriginalDocumentNumber());
     }
 }
