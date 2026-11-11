@@ -93,7 +93,9 @@ public class DocumentController {
 
             try {
                 CancellationRequest request = parseCancellationRequest(line);
-                int reversalNumber = cancelDocument(request);
+                int reversalNumber = documentRepository.cancelDocument(
+                        request.originalNumber(), request.cancelDate()
+                );
                 outputView.printDocumentCanceled(request.originalNumber(), reversalNumber);
                 return true;
             } catch (IllegalArgumentException e) {
@@ -102,12 +104,6 @@ public class DocumentController {
         }
     }
 
-
-    private int cancelDocument(CancellationRequest request) {
-        return documentRepository.cancelDocument(
-                request.originalNumber(), request.cancelDate()
-        );
-    }
 
     public boolean showDocumentDetail() {
         if (documentRepository.isEmpty()) {
