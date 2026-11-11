@@ -2,6 +2,8 @@ package org.example;
 
 import org.example.account.AccountController;
 import org.example.account.repository.AccountRepository;
+import org.example.balance.BalanceController;
+import org.example.balance.BalanceService;
 import org.example.document.DocumentController;
 import org.example.document.repository.DocumentRepository;
 
@@ -10,6 +12,7 @@ public class Controller {
     private final OutputView outputView;
     private final AccountController accountController;
     private final DocumentController documentController;
+    private final BalanceController balanceController;
 
     public Controller(
             InputView inputView,
@@ -21,6 +24,7 @@ public class Controller {
         this.outputView = outputView;
         this.accountController = new AccountController(inputView, outputView, accountRepository);
         this.documentController = new DocumentController(inputView, outputView, accountRepository, documentRepository);
+        this.balanceController = new BalanceController(accountRepository, documentRepository, outputView, new BalanceService());
     }
 
     public void run() {
@@ -54,7 +58,7 @@ public class Controller {
 
             case "6" -> documentController.showDocumentDetail();
             case "7" -> {
-                outputView.printError("아직 구현하지 않은 메뉴입니다.");
+                balanceController.showBalance();
                 yield true;
             }
             default -> {

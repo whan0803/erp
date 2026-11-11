@@ -135,5 +135,19 @@ public class OutputView {
                 + account.getAccountName() + " | " + amount);
     }
 
+    public void printBalances(String category, Map<Account, Long> balances, long total) {
+        System.out.println("[" + category + " 현황]");
 
+        if (balances.isEmpty()) {
+            System.out.println("등록된 " + category + " 계정이 없습니다.");
+        }
+
+        for (Map.Entry<Account, Long> entry : balances.entrySet()) {
+            Account account = entry.getKey();
+            System.out.printf(Locale.US, "%s %s | %,d원%n",
+                    account.getAccountCode(), account.getAccountName(), entry.getValue());
+        }
+
+        System.out.printf(Locale.US, "%s 합계: %,d원%n", category, total);
+    }
 }
