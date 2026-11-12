@@ -39,7 +39,7 @@ public class AccountController {
     private String saveAccount(String line) {
         Account account = parseAccount(line);
         accountRepository.save(account);
-        return  account.getAccountCode();
+        return account.getAccountCode();
     }
 
     private static Account parseAccount(String line) {

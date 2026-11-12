@@ -140,5 +140,4 @@ public class Document {
     public DocumentType getType() {
         return type;
     }
-
 }

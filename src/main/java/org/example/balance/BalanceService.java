@@ -44,7 +44,4 @@ public class BalanceService {
     public long calculateTotal(Map<Account, Long> balances) {
         return balances.values().stream().mapToLong(Long::longValue).sum();
     }
-
-
-
 }

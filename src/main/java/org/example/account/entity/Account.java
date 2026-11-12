@@ -10,7 +10,6 @@ public class Account {
 
 
     public Account(String accountCode, String accountName, AccountClEnum accountCl) {
-
         this.accountCode = validateAccountCode(accountCode);
         this.accountName = validateAccountName(accountName);
         this.accountCl = validateAccountCl(accountCl);
@@ -56,6 +55,4 @@ public class Account {
     public AccountClEnum getAccountCl() {
         return accountCl;
     }
-
-
 }

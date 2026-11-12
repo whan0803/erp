@@ -38,8 +38,4 @@ public enum AccountClEnum {
             case LIABILITY, REVENUE -> creditTotal - debitTotal;
         };
     }
-
-
-
-
 }

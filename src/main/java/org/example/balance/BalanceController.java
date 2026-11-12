@@ -52,6 +52,4 @@ public class BalanceController {
             outputView.printBalances(category.getLabel(), balances, total);
 
         }
-
-        
 }
